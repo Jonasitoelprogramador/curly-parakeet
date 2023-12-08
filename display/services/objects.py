@@ -1,5 +1,5 @@
 import re
-from functools import partial
+
 from bs4 import NavigableString, Tag
 
 '''class ApiInput:
@@ -25,28 +25,29 @@ from bs4 import NavigableString, Tag
         total_characters = sum(len(value) for value in self.sentences.values())
         return total_characters'''
 
-class ApiInput:
+'''class ApiInput:
     def __init__(self, cleaned_sentences, difficult_words):
         self.sentences = cleaned_sentences
         self.final_structure = {}
 
-        for key, text in self.sentences.items():
-            # Dictionary to hold the word occurrences
-            occurrences = {}
-            for word in difficult_words:
-                pattern = r'\b' + re.escape(word) + r'\b'
-                # Find all occurrences of the word
-                indices = [m.span() for m in re.finditer(pattern, text)]
-                if indices:
-                    occurrences[word] = indices
-            
-            # Add to final structure only if there are occurrences
-            if occurrences:
-                self.final_structure[key] = [{word: indices} for word, indices in occurrences.items()], text
+        def format_final_structure(self, words):
+            for key, text in self.sentences.items():
+                # Dictionary to hold the word occurrences
+                occurrences = {}
+                for word in words:
+                    pattern = r'\b' + re.escape(word) + r'\b'
+                    # Find all occurrences of the word
+                    indices = [m.span() for m in re.finditer(pattern, text)]
+                    if indices:
+                        occurrences[word] = indices
+                
+                # Add to final structure only if there are occurrences
+                if occurrences:
+                    self.final_structure[key] = [{word: indices} for word, indices in occurrences.items()], text
             
     def calculate_characters(self):
         total_characters = sum(len(value) for value in self.sentences.values())
-        return total_characters
+        return total_characters'''
 
 class Paragraph:
     def __init__(self, paragraph):
@@ -56,8 +57,8 @@ class Paragraph:
         self.paragraph = paragraph
         self.cleaned_sentences = {}
         self.count = 1
+        self.final_structure = {}
 
-    def separate_to_sentences(self):
         # overall, this returns a dictionary where each entry represents a sentence.  Each sentence contains both NavStrings and Tags
         # loops through the children of the para element
         for input_content in self.paragraph.contents:
@@ -100,7 +101,6 @@ class Paragraph:
                     self.cleaned_sentences[self.count] = []
                 self.cleaned_sentences[self.count].append(input_content)
 
-    def remove_link_entries(self):
         # This removes any entries from the dict if the sentences has a <a></a> tag
         for key in list(self.cleaned_sentences.keys()):
             for element in self.cleaned_sentences[key]:
@@ -108,22 +108,39 @@ class Paragraph:
                     del self.cleaned_sentences[key]
                     break
 
-    # outside of class here you need to check if paragraph is none
-
-    def extract_text(self):
+        # outside of class here you need to check if paragraph is none
         for key in self.cleaned_sentences:
             self.cleaned_sentences[key] = ''.join(element.get_text() if isinstance(element, Tag) else str(element) for element in self.cleaned_sentences[key])
-    
-    def remove_short_sentences(self):
+
         for key in list(self.cleaned_sentences.keys()):
             if len(self.cleaned_sentences[key]) < 5:
                 del self.cleaned_sentences[key]
-    
-    def remove_whitespace(self):
+
         for key in list(self.cleaned_sentences.keys()):
             self.cleaned_sentences[key] = self.cleaned_sentences[key].strip()
-    
-    def remove_unwanted_characters(self):
+
         for key in list(self.cleaned_sentences.keys()):
             if self.cleaned_sentences[key][-1:] not in ['.', '!', '?']:
                 del self.cleaned_sentences[key]
+
+    def calculate_characters(self):
+        total_characters = sum(len(value) for value in self.sentences.values())
+        return total_characters
+    
+    def format_final_structure(self, words):
+        if self.cleaned_sentences:
+            for key, text in self.cleaned_sentences.items():
+                # Dictionary to hold the word occurrences
+                occurrences = {}
+                for word in words:
+                    pattern = r'\b' + re.escape(word) + r'\b'
+                    # Find all occurrences of the word
+                    indices = [m.span() for m in re.finditer(pattern, text)]
+                    if indices:
+                        occurrences[word] = indices
+                
+                # Add to final structure only if there are occurrences
+                if occurrences:
+                    self.final_structure[key] = [{word: indices} for word, indices in occurrences.items()], text
+        else:
+            raise ValueError("Cleaned sentences cannot be null.")

@@ -1,13 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 
-from objects import Paragraph, ApiInput
+from objects import Paragraph
 
 # Define the URL for the Wikimedia REST API for the 'Caramel' page
 
-def call_api(api_url):
+def format_api_response(api_url, words):
     # Initialize variables
-    para_objects = []
+    para_dicts = []
+    final_sentences = []
 
     #while total_characters < 50000:
         # Send a GET request to the API
@@ -20,30 +21,17 @@ def call_api(api_url):
 
         for p in paragraphs:
             initial_para = Paragraph(p)
-            initial_para.separate_to_sentences()
-            #print(f'this is the paragraph {initial_para.paragraph}')
-            initial_para.remove_link_entries()
             if initial_para.cleaned_sentences:
-                initial_para.extract_text()
-                initial_para.remove_short_sentences()
-                initial_para.remove_unwanted_characters()
-                initial_para.remove_whitespace()
-            else:
-                continue
-            if initial_para.cleaned_sentences:
-                para_objects.append(initial_para)
-    
-    return para_objects
+                initial_para.format_final_structure(words)
+                if initial_para.final_structure:
+                    para_dicts.append(initial_para.final_structure)
 
-para_objects = call_api("https://es.wikipedia.org/api/rest_v1/page/html/caramelo")
+        for dicto in para_dicts:
+            for value in dicto.values():
+                final_sentences.append(value)
 
-def format_for_view(para_objects):
-    for o in para_objects:
-        p = ApiInput(o.cleaned_sentences, ['por','para'])
-        if p.final_structure:
-            print(p.final_structure)
+    return final_sentences
 
-format_for_view(para_objects)
-
-'''for p in para_objects:
-    print(p.cleaned_sentences)'''
+if __name__ == "__main__":
+    final_sentences = format_api_response("https://es.wikipedia.org/api/rest_v1/page/html/caramelo", ['por', 'para'])
+    print(final_sentences)
