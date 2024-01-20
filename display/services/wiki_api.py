@@ -1,37 +1,49 @@
 import requests
 from bs4 import BeautifulSoup
 
-from objects import Paragraph
+from .objects import Paragraph
+import time
 
-# Define the URL for the Wikimedia REST API for the 'Caramel' page
-
-def format_api_response(api_url, words):
+def format_api_response(api_url, words, number):
     # Initialize variables
-    para_dicts = []
+    all_sentence_objs = []
     final_sentences = []
 
-    #while total_characters < 50000:
+    start_time = time.time()
+    max_duration = 500
+
+    while len(final_sentences) < number:
+        if time.time() - start_time > max_duration:
+            print("Loop interrupted due to timeout")
+            break
+        
         # Send a GET request to the API
-    response = requests.get(api_url)
+        response = requests.get(api_url)
 
-    if response.status_code == 200:
-        html_content = response.content
-        soup = BeautifulSoup(html_content, 'html.parser')
-        paragraphs = soup.find_all('p')
+        if response.status_code == 200:
+            html_content = response.content
+            soup = BeautifulSoup(html_content, 'html.parser')
+            paragraphs = soup.find_all('p')
 
-        for p in paragraphs:
-            initial_para = Paragraph(p)
-            if initial_para.cleaned_sentences:
-                initial_para.format_final_structure(words)
-                if initial_para.final_structure:
-                    para_dicts.append(initial_para.final_structure)
+            for p in paragraphs:
+                initial_para = Paragraph(p)
+                if initial_para.cleaned_sentences:
+                    initial_para.create_sentence_objs(words)
+                    all_sentence_objs.extend(initial_para.sentence_objs)
 
-        for dicto in para_dicts:
-            for value in dicto.values():
-                final_sentences.append(value)
+            for ob in all_sentence_objs:
+                if ob.key_words:
+                    final_sentences.append((ob.fragments, ob.key_words))
+            all_sentence_objs = []
 
-    return final_sentences
+    if len(final_sentences) > number:
+        final_sentences = final_sentences[:5]
+
+    if final_sentences:
+        return final_sentences
+    else:
+        pass
 
 if __name__ == "__main__":
-    final_sentences = format_api_response("https://es.wikipedia.org/api/rest_v1/page/html/caramelo", ['por', 'para'])
-    print(final_sentences)
+    final_sentences = format_api_response("https://it.wikipedia.org/api/rest_v1/page/random/html", ['di', 'da'], 5)
+

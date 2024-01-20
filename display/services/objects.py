@@ -2,52 +2,6 @@ import re
 
 from bs4 import NavigableString, Tag
 
-'''class ApiInput:
-    def __init__(self, cleaned_sentences, difficult_words):
-        self.sentences = cleaned_sentences
-        for w in difficult_words:
-            setattr(self, f'{w}_sentences', {})
-            method = self.create_dynamic_method(w)
-            bound_method = partial(method, self)
-            setattr(self, f'{w}_search', bound_method)  
-    
-    def create_dynamic_method(self, search_term):  
-        # Define the body of the new method
-        def dynamic_method(self):
-            sentences = {}
-            for key, value in self.sentences.items():
-                if re.search(rf'\b{search_term}\b', value, re.IGNORECASE):
-                    sentences[key] = value
-            setattr(self, f'{search_term}_sentences', sentences)
-        return dynamic_method
-    
-    def calculate_characters(self):
-        total_characters = sum(len(value) for value in self.sentences.values())
-        return total_characters'''
-
-'''class ApiInput:
-    def __init__(self, cleaned_sentences, difficult_words):
-        self.sentences = cleaned_sentences
-        self.final_structure = {}
-
-        def format_final_structure(self, words):
-            for key, text in self.sentences.items():
-                # Dictionary to hold the word occurrences
-                occurrences = {}
-                for word in words:
-                    pattern = r'\b' + re.escape(word) + r'\b'
-                    # Find all occurrences of the word
-                    indices = [m.span() for m in re.finditer(pattern, text)]
-                    if indices:
-                        occurrences[word] = indices
-                
-                # Add to final structure only if there are occurrences
-                if occurrences:
-                    self.final_structure[key] = [{word: indices} for word, indices in occurrences.items()], text
-            
-    def calculate_characters(self):
-        total_characters = sum(len(value) for value in self.sentences.values())
-        return total_characters'''
 
 class Paragraph:
     def __init__(self, paragraph):
@@ -57,8 +11,8 @@ class Paragraph:
         self.paragraph = paragraph
         self.cleaned_sentences = {}
         self.count = 1
-        self.final_structure = {}
-
+        self.sentence_objs = []
+        
         # overall, this returns a dictionary where each entry represents a sentence.  Each sentence contains both NavStrings and Tags
         # loops through the children of the para element
         for input_content in self.paragraph.contents:
@@ -127,20 +81,37 @@ class Paragraph:
         total_characters = sum(len(value) for value in self.sentences.values())
         return total_characters
     
-    def format_final_structure(self, words):
-        if self.cleaned_sentences:
-            for key, text in self.cleaned_sentences.items():
-                # Dictionary to hold the word occurrences
-                occurrences = {}
-                for word in words:
-                    pattern = r'\b' + re.escape(word) + r'\b'
-                    # Find all occurrences of the word
-                    indices = [m.span() for m in re.finditer(pattern, text)]
-                    if indices:
-                        occurrences[word] = indices
-                
-                # Add to final structure only if there are occurrences
-                if occurrences:
-                    self.final_structure[key] = [{word: indices} for word, indices in occurrences.items()], text
+    def create_sentence_objs(self, words):
+        if self.cleaned_sentences:   
+            for text in self.cleaned_sentences.values():
+                escaped_words = [re.escape(word) for word in words]
+                pattern = r'\b(?:' + '|'.join(escaped_words) + r')\b'
+                fragment = text
+                next_fragment = ''
+                fragments = []
+                word_order = []
+                while re.search(pattern, fragment):
+                    match = re.search(pattern, fragment)
+                    new_fragment = fragment[:match.start()]
+                    next_fragment = fragment[match.end():]
+                    fragments.append(new_fragment)
+                    word_order.append((match.group()).strip())
+                    fragment = next_fragment
+                fragments.append(fragment)
+                sentence = Sentence(text, fragments, word_order)
+                self.sentence_objs.append(sentence)
         else:
             raise ValueError("Cleaned sentences cannot be null.")
+
+class Sentence:
+    def __init__(self, text, fragments, key_words):
+        # Define the URL for the Wikimedia REST API for the 'Caramel' page
+        self.text = text
+        self.fragments = fragments
+        self.key_words = key_words
+
+  
+
+
+
+
