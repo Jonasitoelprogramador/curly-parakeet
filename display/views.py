@@ -8,6 +8,9 @@ from django.http import JsonResponse
 
 import json
 
+from functools import lru_cache
+
+
 
 from django.http import JsonResponse
 import json
@@ -29,6 +32,9 @@ def get_sentences(request):
 
     except Exception as e:
         # Return an error response with a custom message and a 400 status code
+        # The Exception in this case refers to the ValuError above
+        # The dictionary below basically puts the message from the ValueError as a string
+        # This is the accesible in error.response.data.error
         return JsonResponse({"error": str(e)}, status=400)
 
 

@@ -10,12 +10,12 @@ def format_api_response(api_url, words, number):
     final_sentences = []
 
     start_time = time.time()
-    max_duration = 500
+    max_duration = 10
 
     while len(final_sentences) < number:
         if time.time() - start_time > max_duration:
-            print("Loop interrupted due to timeout")
-            break
+            raise ValueError("Getting sentences took too long")
+
         
         # Send a GET request to the API
         response = requests.get(api_url)

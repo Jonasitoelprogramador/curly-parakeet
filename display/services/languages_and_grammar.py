@@ -1,7 +1,7 @@
 languages_list_content = [{'language': 'French', 'grammarPoints': [{'id': 1, 'point': "savoir VS conaitre"}]}, 
-                        {'language': 'Spanish', 'grammarPoints': [{'id': 2, 'point': 'saber VS conocer'}, {'id': 3, 'point': 'por VS para'}, {'id': 4, 'point': 'imperfect VS preterite'}]},
-                         {'language': 'Portuguese', 'grammarPoints': [{'id': 5, 'point': "saber VS connhecer"}, {'id': 6, 'point': "por VS para"}, {'id': 7, 'point': "imperfect VS preterite"}]},
-                           {'language': 'Italian', 'grammarPoints': [{'id': 8, 'point': "sappere VS conoscere"}, {'id': 9, 'point': 'di VS da'}, {'id': 10, 'point': "imperfect VS preterite"}]}]
+                        {'language': 'Spanish', 'grammarPoints': [{'id': 2, 'point': 'saber VS conocer'}, {'id': 3, 'point': 'por VS para'}]},
+                         {'language': 'Portuguese', 'grammarPoints': [{'id': 5, 'point': "saber VS connhecer"}, {'id': 6, 'point': "por VS para"}]},
+                           {'language': 'Italian', 'grammarPoints': [{'id': 8, 'point': "sappere VS conoscere"}, {'id': 9, 'point': 'di VS da'}]}]
 
 language_codes = {
     "Spanish": "es",
