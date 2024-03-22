@@ -10,8 +10,6 @@ import json
 
 from functools import lru_cache
 
-
-
 from django.http import JsonResponse
 import json
 
@@ -23,7 +21,7 @@ def get_sentences(request):
         language_code = get_language_code(language)
         difficult_words = grammar_point.split(' VS ')
         final_sentences = api_response(f"https://{language_code}.wikipedia.org/api/rest_v1/page/random/html", difficult_words, 5)
-
+        
         if not final_sentences:
             raise ValueError("No sentences found")
 

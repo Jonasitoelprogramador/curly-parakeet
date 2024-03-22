@@ -78,7 +78,7 @@ class Paragraph:
                 del self.cleaned_sentences[key]
 
     def calculate_characters(self):
-        total_characters = sum(len(value) for value in self.sentences.values())
+        total_characters = sum(len(value) for value in self.cleaned_sentences.values())
         return total_characters
     
     def create_sentence_objs(self, words):
@@ -102,15 +102,14 @@ class Paragraph:
                 self.sentence_objs.append(sentence)
         else:
             raise ValueError("Cleaned sentences cannot be null.")
+        
 
 class Sentence:
     def __init__(self, text, fragments, key_words):
-        # Define the URL for the Wikimedia REST API for the 'Caramel' page
         self.text = text
         self.fragments = fragments
         self.key_words = key_words
 
-  
 
 
 
