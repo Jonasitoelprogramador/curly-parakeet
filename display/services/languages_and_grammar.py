@@ -1,7 +1,7 @@
-languages_list_content = [{'language': 'French', 'grammarPoints': [{'id': 1, 'point': "savoir VS conaitre"}]}, 
-                        {'language': 'Spanish', 'grammarPoints': [{'id': 2, 'point': 'saber VS conocer'}, {'id': 3, 'point': 'por VS para'}]},
-                         {'language': 'Portuguese', 'grammarPoints': [{'id': 5, 'point': "saber VS connhecer"}, {'id': 6, 'point': "por VS para"}]},
-                           {'language': 'Italian', 'grammarPoints': [{'id': 8, 'point': "sappere VS conoscere"}, {'id': 9, 'point': 'di VS da'}]}]
+languages_list_content = [{'language': 'French', 'grammarPoints': [{'id': 1, 'point': "savoir VS conaitre", 'verb': True}]}, 
+                        {'language': 'Spanish', 'grammarPoints': [{'id': 2, 'point': 'saber VS conocer', 'verb': True}, {'id': 3, 'point': 'por VS para', 'verb': False}]},
+                         {'language': 'Portuguese', 'grammarPoints': [{'id': 5, 'point': "saber VS connhecer", 'verb': True}, {'id': 6, 'point': "por VS para", 'verb': False}]},
+                           {'language': 'Italian', 'grammarPoints': [{'id': 8, 'point': "sapere VS conoscere", 'verb': True}, {'id': 9, 'point': 'di VS da', 'verb': False}]}]
 
 language_codes = {
     "Spanish": "es",
@@ -16,7 +16,7 @@ def find_language_and_point(id_number):
     for language_item in languages_list_content:
         for grammar_point in language_item['grammarPoints']:
             if grammar_point['id'] == id_number:
-                return language_item['language'], grammar_point['point']
+                return language_item['language'], grammar_point['point'], grammar_point['verb']
 
     return None, None  # Return None if not found
 
