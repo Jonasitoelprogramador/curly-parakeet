@@ -54,4 +54,4 @@ typing-extensions==4.8.0
 urllib3==2.1.0
 wasabi==1.1.2
 weasel==0.3.4
-wheel==0.37.1
+gunicorn==20.1.0

@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'flashcards-backend-ff2b7ae149b6.herokuapp.com'
 ]
 
 
