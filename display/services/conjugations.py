@@ -1,4 +1,5 @@
 from mlconjug3 import Conjugator
+from memory_profiler import profile, memory_usage
 
 
 unwanted_es_tenses = ['Indicativo Pretérito imperfecto', 'Indicativo Pretérito pluscuamperfecto', 'Subjuntivo Pretérito imperfecto 1', 'Subjuntivo Pretérito pluscuamperfecto 1',
@@ -122,11 +123,21 @@ def get_formatter(data, language_code):
         return french_conjugation_formatter
 
 
+class ConjugatorSingleton:
+    _instances = {}
+
+    @classmethod
+    def get_instance(cls, language):
+        if language not in cls._instances:
+            cls._instances[language] = Conjugator(language=language)
+        return cls._instances[language]
+
+
 def get_conjugations(key_word, language_code):
-        # initialize the conjugator
-        conjugator = Conjugator(language=language_code)
-        conjugations = conjugator.conjugate(key_word)
-        return conjugations
+    conjugator = ConjugatorSingleton.get_instance(language_code)
+    conjugations = conjugator.conjugate(key_word)
+    return conjugations
+
 
 
 def format_conjugations(conjugations, get_formatter, language_code):

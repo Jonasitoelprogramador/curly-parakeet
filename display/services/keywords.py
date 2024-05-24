@@ -30,7 +30,7 @@ class CreateKeywordObjects():
     
     def conjugation_keyword_constructor(self, form, infinitive, mood, tense, person):        
         return ConjugationKeyword(form, True, infinitive, mood, tense, person)
-
+    
     def process(self):
         if not self.verb:
             keyword_objects = []

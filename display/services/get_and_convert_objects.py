@@ -1,14 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
 
-from .beautiful_soup_paras_to_sentence_strings import BeautifulSoupParagraphToSentenceStrings
-from .sentences import sentence_constructor
-from .sentence_strings_to_fragments import GetMatches
-from .conjugations import get_formatter, get_conjugations, format_conjugations
-from .keywords import CreateKeywordObjects, AddContrastiveForms
+from beautiful_soup_paras_to_sentence_strings import BeautifulSoupParagraphToSentenceStrings
+from sentences import sentence_constructor
+from sentence_strings_to_fragments import GetMatches
+from conjugations import get_formatter, get_conjugations, format_conjugations
+from keywords import CreateKeywordObjects, AddContrastiveForms
 
 
 import time
+
 
 def get_objects(api_url, key_words, number, verb, language_code):
     # Initialize variables
@@ -38,11 +39,13 @@ def get_objects(api_url, key_words, number, verb, language_code):
 
                 for s in cleaned_sentences.values():
                     fragments, matching_objects = GetMatches(s, keyword_objects).process()
-                    
+                    if len(matching_objects) >= 1:
+                        print(f"matching_objects: {matching_objects[0].form}")
                     if matching_objects:
                         matching_objects_with_contrastive_forms = AddContrastiveForms(matching_objects, key_words, language_code, get_conjugations, format_conjugations, get_formatter).get_contrastive_forms()
                         sentence_object = sentence_constructor(s, fragments, matching_objects_with_contrastive_forms)     
                         all_sentence_objects.append(sentence_object)
+    print(f"all_sentence_objects: {all_sentence_objects}")
     return all_sentence_objects
     
 
@@ -91,6 +94,6 @@ class SentenceObjectToDict():
 
 
 if __name__ == "__main__":
-    all_sentence_objects = get_objects("https://es.wikipedia.org/api/rest_v1/page/random/html", ['di', 'da'], 5, True, 'it')
+    all_sentence_objects = get_objects("https://it.wikipedia.org/api/rest_v1/page/random/html", ['sapere', 'conoscere'], 2, True, 'it')
     print(all_sentence_objects)
 
