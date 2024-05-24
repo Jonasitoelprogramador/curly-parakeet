@@ -37,7 +37,7 @@ def get_sentences(request):
     def data_stream():
         try:
             # Send initial trivial data
-            yield "data: {\"status\": \"processing\"}\n\n"
+            yield JsonResponse({"status":"processing"})
 
             id = json.loads(request.body)
             language, grammar_point, verb = find_language_and_point(id)
@@ -51,11 +51,11 @@ def get_sentences(request):
 
             # Send the actual data
             json_data = json.dumps(sentence_dicts)
-            yield f"data: {json_data}\n\n"
+            yield JsonResponse(json_data, safe=False)
 
         except Exception as e:
             # Send error message
-            yield f"data: {{\"error\": \"{str(e)}\"}}\n\n"
+            yield JsonResponse({"error": str(e)}, status=400)
 
     # Return a streaming response
     response = StreamingHttpResponse(data_stream(), content_type="text/event-stream")
