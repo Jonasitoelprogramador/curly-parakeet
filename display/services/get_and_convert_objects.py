@@ -16,7 +16,7 @@ def get_objects(api_url, key_words, number, verb, language_code):
     all_sentence_objects = []
 
     start_time = time.time()
-    max_duration = 60
+    max_duration = 120
 
     # formatted_conjugations is a list where each element is a list of all of the conjugations with metadata
     # conjugations for matching is now a list of Conjugation objects
