@@ -1,5 +1,4 @@
 from mlconjug3 import Conjugator
-from memory_profiler import profile, memory_usage
 
 
 unwanted_es_tenses = ['Indicativo Pretérito imperfecto', 'Indicativo Pretérito pluscuamperfecto', 'Subjuntivo Pretérito imperfecto 1', 'Subjuntivo Pretérito pluscuamperfecto 1',
