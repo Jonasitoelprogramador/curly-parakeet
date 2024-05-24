@@ -1,11 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 
-from beautiful_soup_paras_to_sentence_strings import BeautifulSoupParagraphToSentenceStrings
-from sentences import sentence_constructor
-from sentence_strings_to_fragments import GetMatches
-from conjugations import get_formatter, get_conjugations, format_conjugations
-from keywords import CreateKeywordObjects, AddContrastiveForms
+from .beautiful_soup_paras_to_sentence_strings import BeautifulSoupParagraphToSentenceStrings
+from .sentences import sentence_constructor
+from .sentence_strings_to_fragments import GetMatches
+from .conjugations import get_formatter, get_conjugations, format_conjugations
+from .keywords import CreateKeywordObjects, AddContrastiveForms
 
 
 import time
