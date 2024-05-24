@@ -62,10 +62,10 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = False
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://flashcard-project-lh2kar0yw-jonasitos-projects.vercel.app']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://flashcard-project-4raa9zfan-jonasitos-projects.vercel.app/']
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173', 'https://flashcard-project-lh2kar0yw-jonasitos-projects.vercel.app',
+    'http://localhost:5173', 'https://flashcard-project-4raa9zfan-jonasitos-projects.vercel.app/',
 ]
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken', "access-control-allow-credentials"]
 CORS_ALLOW_CREDENTIALS = True
