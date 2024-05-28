@@ -58,8 +58,10 @@ def get_sentences(request):
             yield JsonResponse({"error": str(e)}, status=400)
 
     # Return a streaming response
-    response = StreamingHttpResponse(data_stream(), content_type="text/event-stream")
-    return response
+    
+    print(f"data_steam output: {data_stream()}")
+    #response = StreamingHttpResponse(data_stream(), content_type="text/event-stream")
+    return HttpResponse("hello")
 
 
 
