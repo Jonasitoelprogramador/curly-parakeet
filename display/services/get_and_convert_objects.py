@@ -1,11 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
-from .beautiful_soup_paras_to_sentence_strings import BeautifulSoupParagraphToSentenceStrings
-from .sentences import sentence_constructor
-from .sentence_strings_to_fragments import GetMatches
-from .conjugations import get_formatter, get_conjugations, format_conjugations
-from .keywords import CreateKeywordObjects, AddContrastiveForms
+from beautiful_soup_paras_to_sentence_strings import BeautifulSoupParagraphToSentenceStrings, CreateSentenceStrings
+from sentences import sentence_constructor
+from sentence_strings_to_fragments import GetMatches
+from conjugations import get_formatter, get_conjugations, format_conjugations
+from keywords import CreateKeywordObjects, AddContrastiveForms
 
 
 import time
@@ -16,7 +17,7 @@ def get_objects(api_url, key_words, number, verb, language_code):
     all_sentence_objects = []
 
     start_time = time.time()
-    max_duration = 120
+    max_duration = 30
 
     # formatted_conjugations is a list where each element is a list of all of the conjugations with metadata
     # conjugations for matching is now a list of Conjugation objects
@@ -31,13 +32,18 @@ def get_objects(api_url, key_words, number, verb, language_code):
 
         if response.status_code == 200:
             html_content = response.content
+        else:
+            raise ValueError("Error with API")
+        
+        if check_for_keyword(html_content, keyword_objects):
             soup = BeautifulSoup(html_content, 'html.parser')
             paragraphs = soup.find_all('p')
 
             for p in paragraphs:
-                cleaned_sentences = BeautifulSoupParagraphToSentenceStrings(p, "(?<!\b[a-z]{1})[!?.]", 'a').extract_and_format()
+                #cleaned_sentences1 = BeautifulSoupParagraphToSentenceStrings(p, "(?<!\b[a-z]{1})[!?.]", 'a').extract_and_format()
+                cleaned_sentences2 = CreateSentenceStrings(p).process()
 
-                for s in cleaned_sentences.values():
+                for s in cleaned_sentences2.values():
                     fragments, matching_objects = GetMatches(s, keyword_objects).process()
                     if len(matching_objects) >= 1:
                         print(f"matching_objects: {matching_objects[0].form}")
@@ -93,7 +99,24 @@ class SentenceObjectToDict():
         return sentence_dicts
 
 
+def check_for_keyword(html_content, keyword_objects):
+    # Decode bytes to string if necessary
+    if isinstance(html_content, bytes):
+        html_content = html_content.decode('utf-8')
+
+    matched_keywords = []
+    for keyword_obj in keyword_objects:
+        pattern = re.compile(rf'\b{re.escape(keyword_obj.form)}\b')
+        if pattern.search(html_content):
+            matched_keywords.append(keyword_obj.form)
+    
+    keyword_found = bool(matched_keywords)
+    print("Keywords found:", matched_keywords)
+    return keyword_found, matched_keywords
+
+
+
 if __name__ == "__main__":
-    all_sentence_objects = get_objects("https://it.wikipedia.org/api/rest_v1/page/random/html", ['sapere', 'conoscere'], 2, True, 'it')
+    all_sentence_objects = get_objects("https://it.wikipedia.org/api/rest_v1/page/random/html", ['sapere', 'conoscere'], 5, True, 'it')
     print(all_sentence_objects)
 

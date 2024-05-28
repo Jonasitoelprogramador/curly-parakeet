@@ -12,7 +12,7 @@ from functools import lru_cache
 from django.http import JsonResponse, StreamingHttpResponse
 import json
 
-'''@csrf_exempt
+@csrf_exempt
 def get_sentences(request):
     try:
         id = json.loads(request.body)
@@ -30,20 +30,21 @@ def get_sentences(request):
         return JsonResponse(json_data, safe=False)
 
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)'''
+        return JsonResponse({"error": str(e)}, status=400)
     
+"""
 @csrf_exempt
 def get_sentences(request):
-    def data_stream():
+    async def data_stream():
         try:
             # Send initial trivial data
-            yield JsonResponse({"status":"processing"})
+            yield json.dumps({"status": "processing"}) + "\n"
 
             id = json.loads(request.body)
             language, grammar_point, verb = find_language_and_point(id)
             language_code = get_language_code(language)
             difficult_words = grammar_point.split(' VS ')
-            all_sentence_objects = get_objects(f"https://{language_code}.wikipedia.org/api/rest_v1/page/random/html", difficult_words, 5, verb, language_code)
+            all_sentence_objects = await get_objects(f"https://{language_code}.wikipedia.org/api/rest_v1/page/random/html", difficult_words, 5, verb, language_code)
             sentence_dicts = SentenceObjectToDict(all_sentence_objects).process()
 
             if not sentence_dicts:
@@ -51,18 +52,14 @@ def get_sentences(request):
 
             # Send the actual data
             json_data = json.dumps(sentence_dicts)
-            yield JsonResponse(json_data, safe=False)
+            yield json_data + "\n"
 
         except Exception as e:
             # Send error message
-            yield JsonResponse({"error": str(e)}, status=400)
+            yield json.dumps({"error": str(e)}) + "\n"
 
     # Return a streaming response
-    
-    print(f"data_steam output: {data_stream()}")
-    #response = StreamingHttpResponse(data_stream(), content_type="text/event-stream")
-    return HttpResponse("hello")
-
+    return StreamingHttpResponse(data_stream(), content_type="text/event-stream")"""
 
 
 @ensure_csrf_cookie

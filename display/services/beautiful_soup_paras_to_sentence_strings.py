@@ -100,14 +100,30 @@ class BeautifulSoupParagraphToSentenceStrings():
 
     def extract_and_format(self):
         self.remove_sentences()
+        print(f"extracted_sentences: {len(self.extracted_sentences)}")
         self.remove_entries(self.tag_name)
+        print(f"tagless_sentences: {len(self.tagless_sentences)}")
         self.markup_to_text()
         self.clean_sentences()
         return self.cleaned_sentences
 
 
+class CreateSentenceStrings():
+    def __init__(self, paragraph):
+        self.paragraph = paragraph
 
+    def get_plain_text(self, paragraph):
+        plain_text = paragraph.get_text(separator=' ', strip=True)
+        return plain_text
 
-
-
+    def sentences_to_dict(self, plain_text):
+        sentence_pattern = re.compile(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s')
+        sentences = sentence_pattern.split(plain_text.strip())
+        sentence_dict = {i+1: sentence.strip() for i, sentence in enumerate(sentences)}
+        return sentence_dict
+    
+    def process(self):
+        plain_text = self.get_plain_text(self.paragraph)
+        sentence_dict = self.sentences_to_dict(plain_text)
+        return sentence_dict
     
