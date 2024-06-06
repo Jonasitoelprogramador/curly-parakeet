@@ -31,35 +31,6 @@ def get_sentences(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-    
-"""
-@csrf_exempt
-def get_sentences(request):
-    async def data_stream():
-        try:
-            # Send initial trivial data
-            yield json.dumps({"status": "processing"}) + "\n"
-
-            id = json.loads(request.body)
-            language, grammar_point, verb = find_language_and_point(id)
-            language_code = get_language_code(language)
-            difficult_words = grammar_point.split(' VS ')
-            all_sentence_objects = await get_objects(f"https://{language_code}.wikipedia.org/api/rest_v1/page/random/html", difficult_words, 5, verb, language_code)
-            sentence_dicts = SentenceObjectToDict(all_sentence_objects).process()
-
-            if not sentence_dicts:
-                raise ValueError("No sentences found")
-
-            # Send the actual data
-            json_data = json.dumps(sentence_dicts)
-            yield json_data + "\n"
-
-        except Exception as e:
-            # Send error message
-            yield json.dumps({"error": str(e)}) + "\n"
-
-    # Return a streaming response
-    return StreamingHttpResponse(data_stream(), content_type="text/event-stream")"""
 
 
 @ensure_csrf_cookie
