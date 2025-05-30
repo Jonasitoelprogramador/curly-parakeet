@@ -60,7 +60,7 @@ MIDDLEWARE = [
 
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False
 SESSION_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://flashcard-project-1cnd4rcl8-jonasitos-projects.vercel.app']
 
