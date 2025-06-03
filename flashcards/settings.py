@@ -46,28 +46,26 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = False
-SESSION_COOKIE_HTTPONLY = False
+SESSION_COOKIE_HTTPONLY = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'https://flashcard-project-1cnd4rcl8-jonasitos-projects.vercel.app']
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173', 'https://flashcard-project-1cnd4rcl8-jonasitos-projects.vercel.app',
 ]
-CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken', "access-control-allow-credentials"]
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'flashcards.urls'
